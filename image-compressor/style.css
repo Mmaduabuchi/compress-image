@@ -1,0 +1,47 @@
+#body{
+    background: hsl(276, 37%, 59%);
+}
+#uploadImage{
+    margin-left: 20%;
+    font-size: 20px;
+    margin-top: 10%;
+    margin-left: 25%;
+}
+form{
+    border: none;
+    border-top: 4px solid white;
+    color: white;
+    font-family: lato;
+    font-weight: bolder;
+    background: hsl(276, 100%, 20%);
+    box-shadow: 2px 2px 20px hsl(276, 100%, 20%);
+}
+form:hover{
+    cursor: help;
+}
+#submitBTU{
+    border: none;
+    border-radius: 0.2rem;
+    padding: 1rem;
+    text-align: center;
+    font-weight: bolder;
+    background: blue;
+    margin-top: 20%;
+    width: 50%;
+    color: white;
+    margin-left: 25%;
+}
+#submitBTU:hover{
+    cursor: pointer;
+}
+h2{
+    text-align: center;
+    font-weight: bold;
+    font-family: lato;
+    text-shadow: 2px 2px 10px rgb(144, 154, 197);
+    font-size: 200%;
+    color: white;
+}
+span{
+    text-align: center;
+}
