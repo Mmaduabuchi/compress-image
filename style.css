@@ -1,10 +1,15 @@
 #uploadImage{
-    margin-left: 20%;
     font-size: 20px;
     margin-top: 10%;
-    margin-left: 25%;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    width: 99.6%;
+    background: black;
 }
 form{
+  margin: 5%;
+  background: rgba(0, 0, 0, 0.1);
+}
+.form-container{
     border: none;
     border-top: 50px solid black;
     color: white;
@@ -32,6 +37,11 @@ h2{
     font-weight: bold;
     font-size: 2rem;
 }
-span{
+#err-msg-holder{
     text-align: center;
+    color: cyan;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 0rem;
+    margin: 0%;
 }

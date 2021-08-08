@@ -12,7 +12,7 @@
         $location = "compressedImageFile/" . $uploadFile;
 
         //create an array with image extensions
-        $extensions = array('png','jpg','jpeg');
+        $extensions = array('png','gif','jpg','jpeg');
 
         //get the user input file type extension
         $fileExtension = pathinfo($uploadFile, PATHINFO_EXTENSION);
@@ -24,7 +24,7 @@
         if(empty($uploadFile)){
 
             //display an empty message warning
-            $empty = "The input is empty!";
+            $empty = "Choose Your Image To Compress...!";
 
         }else{
 
@@ -37,17 +37,22 @@
                   //get the size of the image
                   $details = getimagesize($source);
 
-                  if($details['mime'] == 'image/jpeg'){
+                  $mime = $details['mime'];
 
-                      $image = imagecreatefromjpeg($source);
-                  }
-                  elseif($details['mime'] == 'image/png'){
+                  if($mime == 'image/jpg'){
+
+                      $image = imagecreatefromjpg($source);
+
+                  }elseif($mime == 'image/png'){
 
                       $image = imagecreatefrompng($source);
 
-                  }elseif($details['mime'] == 'image/jpg'){
+                  }elseif($mime == 'image/gif'){
 
-                      $image = imagecreatefromjpg($source);
+                      $image = imagecreatefromgif($source);
+
+                  }else {
+
                   }
 
                   //compress the image file to the quality given
@@ -75,20 +80,19 @@
         <title>Mr.Pinnacle Compressor</title>
     </head>
     <body class="container-fluid m-0 p-0" id="body">
-        <h2>Mr.Pinnacle Image Compressor</h2>
-        <br><br>
-        <div class="col-8">
+        <div class="form-container">
+            <h2>Image Compressor</h2>
             <form action="compressor.php" name="form" method="POST" enctype="multipart/form-data">
+              <div id="err-msg-holder">
+                  <?php echo $empty; ?>
+              </div>
+              <br>
                 <input type="file" name="image" id="uploadImage">
                 <br>
-                <span class="text-danger">
-                    <?php echo $empty; ?>
-                </span>
                 <br>
                 <input type="submit" name="submit" value="CompressImage" id="submitBTU">
                 <br><br>
             </form>
         </div>
-
     </body>
 </html>
