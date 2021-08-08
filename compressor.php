@@ -71,19 +71,14 @@
     <head>
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial_scale=0.1">
-        <link rel="stylesheet" href="booststrap/css/booststrap.css">
-        <link rel="stylesheet" href="booststrap/js/booststrap.js">
         <link rel="stylesheet" href="style.css">
         <title>Mr.Pinnacle Compressor</title>
     </head>
     <body class="container-fluid m-0 p-0" id="body">
         <h2>Mr.Pinnacle Image Compressor</h2>
         <br><br>
-        <div class="row">
-        <div class="col-2"></div>
         <div class="col-8">
             <form action="compressor.php" name="form" method="POST" enctype="multipart/form-data">
-
                 <input type="file" name="image" id="uploadImage">
                 <br>
                 <span class="text-danger">
@@ -93,8 +88,6 @@
                 <input type="submit" name="submit" value="CompressImage" id="submitBTU">
                 <br><br>
             </form>
-        </div>
-        <div class="col-2"></div>
         </div>
 
     </body>
