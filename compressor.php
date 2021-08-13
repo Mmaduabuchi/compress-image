@@ -1,98 +1,142 @@
 <?php
     //create an empty array
-    $empty = "";
+    $emptyInput = $status = "";
+
+    //function to compress the image
+    function compressImage($source, $destination, $quality){
+
+        //get the size of the image
+        $details = getimagesize($source);
+
+        $mime = $details['mime'];
+
+        if($mime == 'image/jpg'){
+            $image = imagecreatefromjpg($source);
+        }elseif($mime == 'image/png'){
+            $image = imagecreatefrompng($source);
+        }elseif($mime == 'image/gif'){
+            $image = imagecreatefromgif($source);
+        }
+
+        //compress the image file to the quality given
+        imagejpeg($image, $destination, $quality);
+
+        //return image compressed
+        return $destination;
+
+    }
 
     //check if the have been submited
     if(isset($_POST["submit"])){
 
-        //get the user input as image name
-        $uploadFile = $_FILES["image"]["name"];
+      //check if the input is empty
+      if(empty($_FILES['image']['name'])){
 
-        //target the folder to insert the image
-        $location = "compressedImageFile/" . $uploadFile;
+          //display an empty message warning
+          $emptyInput = "Choose Your Image To Compress...!";
 
-        //create an array with image extensions
-        $extensions = array('png','gif','jpg','jpeg');
+      }else{
 
-        //get the user input file type extension
-        $fileExtension = pathinfo($uploadFile, PATHINFO_EXTENSION);
+          //get the user input as image name
+          $uploadFile = basename($_FILES["image"]["name"]);
 
-        //convert the image file extension to lower case
-        $tolower = strtolower($fileExtension);
+          //target the folder to insert the image
+          $location = "compressedImageFile/" . $uploadFile;
 
-        //check if the input is empty
-        if(empty($uploadFile)){
+          //create an array with image extensions
+          $extensions = array('png','gif','jpg','jpeg');
 
-            //display an empty message warning
-            $empty = "Choose Your Image To Compress...!";
+          //get the user input file type extension
+          $fileExtension = pathinfo($uploadFile, PATHINFO_EXTENSION);
 
-        }else{
+          //convert the image file extension to lower case
+          $tolowerExt = strtolower($fileExtension);
 
-            //if the user input file has a valid extension for image
-            if(in_array ($tolower, $extensions)){
+              //if the user input file has a valid extension of image
+              if(in_array ($tolowerExt, $extensions)){
 
-              //function to compress the image
-              function compressimage($source, $destination, $quality){
+                //image temp source
+                $imageTempname = $_FILES['image']['tmp_name'];
+                $imagesize = $_FILES['image']['size'];
 
-                  //get the size of the image
-                  $details = getimagesize($source);
+                  //call this function
+                $compressedImage = compressImage($imageTempname, $location, 60);
 
-                  $mime = $details['mime'];
+                if ($compressedImage ) {
+                  //get file size
+                  $compressedImageSize = filesize($compressedImage);
+                  //done
+                  $status = "successfully compressed..";
+                }else {
+                  //not done
+                  $emptyInput = "Image compression failed..";
+                }
 
-                  if($mime == 'image/jpg'){
-
-                      $image = imagecreatefromjpg($source);
-
-                  }elseif($mime == 'image/png'){
-
-                      $image = imagecreatefrompng($source);
-
-                  }elseif($mime == 'image/gif'){
-
-                      $image = imagecreatefromgif($source);
-
-                  }else {
-
-                  }
-
-                  //compress the image file to the quality given
-                  imagejpeg($image, $destination, $quality);
+              }else{
+                  //error warning
+                  $emptyInput = "Invalid Image Extension USE (JPG, JPEG, GIF, PNG)....!";
               }
-
-                //call this function
-                compressimage($_FILES['image']['tmp_name'], $location, 60);
-
-            }else{
-                //alert an error warning
-                echo"<script> alert('invaild file type (not an image!)'); </script>";
-            }
-
         }
     }
 ?>
-
 <!doctype html>
 <html lang="en">
     <head>
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial_scale=0.1">
-        <link rel="stylesheet" href="style.css">
         <title>Mr.Pinnacle Compressor</title>
+        <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="./bootstrap/js/bootstrap.js">
+        <style media="screen">
+          body{
+            background: url(images/img.jpeg);
+            background-size: cover;
+          }
+          h2{
+            font-weight: bold;
+            font-family: sans-serif;
+          }
+          form{
+            margin-top: 20%;
+          }
+          span{
+            font-size: 1.2rem;
+            font-weight: bold;
+          }
+        </style>
     </head>
-    <body class="container-fluid m-0 p-0" id="body">
-        <div class="form-container">
-            <h2>Image Compressor</h2>
-            <form action="compressor.php" name="form" method="POST" enctype="multipart/form-data">
-              <div id="err-msg-holder">
-                  <?php echo $empty; ?>
-              </div>
+    <body class="container">
+      <div class="row pt-5">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h2 class="mt-3 mb-5 text-center">Choose Your Image to Compressor</h2>
+            <form action="compressor.php" method="POST" enctype="multipart/form-data">
+              <span class="mb-3 text-danger">
+                  <?php echo $emptyInput; ?>
+              </span>
+              <input type="file" name="image" class="form-control mb-5">
+              <button type="submit" class="btn btn-primary mb-5 w-100 p-3" name="submit">Compress Now</button>
               <br>
-                <input type="file" name="image" id="uploadImage">
-                <br>
-                <br>
-                <input type="submit" name="submit" value="CompressImage" id="submitBTU">
-                <br><br>
+              <span class="mb-3 text-success">
+                  <?php echo $status; ?>
+              </span>
             </form>
+          </div>
+          <div class="col-3"></div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-12">
+            <?php if (!empty($compressedImage)) {?>
+              <p> Original Image Size:<?php echo $imagesize; ?></p>
+              <p> Compressed Image Size:<?php echo $compressedImageSize; ?></p>
+              <img src="<?php $compressedImage; ?>">
+            <?php }?>
+          </div>
+          <div class="col-12 mt-5 text-end">
+            <a href="index.php">
+              <button type="button" class="btn btn-dark" name="button">Go Back</button>
+            </a>
+          </div>
         </div>
     </body>
 </html>
