@@ -20,10 +20,6 @@
 
         //compress the image file to the quality given
         imagejpeg($image, $destination, $quality);
-
-        //return image compressed
-        return $destination;
-
     }
 
     //check if the have been submited
@@ -38,10 +34,10 @@
       }else{
 
           //get the user input as image name
-          $uploadFile = basename($_FILES["image"]["name"]);
+          $uploadFile = $_FILES['image']['name'];
 
           //target the folder to insert the image
-          $location = "compressedImageFile/" . $uploadFile;
+          $location = "compressedImageFile/".$uploadFile;
 
           //create an array with image extensions
           $extensions = array('png','gif','jpg','jpeg');
@@ -55,12 +51,10 @@
               //if the user input file has a valid extension of image
               if(in_array ($tolowerExt, $extensions)){
 
-                //image temp source
-                $imageTempname = $_FILES['image']['tmp_name'];
                 $imagesize = $_FILES['image']['size'];
 
                   //call this function
-                $compressedImage = compressImage($imageTempname, $location, 60);
+                $compressedImage = compressImage($_FILES['image']['tmp_name'], $location, 60);
 
                 if ($compressedImage ) {
                   //get file size
