@@ -1,114 +1,131 @@
 <?php
-    //create an empty array
-    $emptyInput = $status = "";
+  //create an empty array
+  $emptyInput = $status = "";
 
-    //function to compress the image
-    function compressImage($source, $destination, $quality){
+  //function to compress the image
+  function compressImage($source, $destination, $quality){
 
-        //get the size of the image
-        $details = getimagesize($source);
+    //get the size of the image
+    $details = getimagesize($source);
 
-        $mime = $details['mime'];
+    $mime = $details['mime'];
 
-        if($mime == 'image/jpg'){
-            $image = imagecreatefromjpg($source);
-        }elseif($mime == 'image/png'){
-            $image = imagecreatefrompng($source);
-        }elseif($mime == 'image/gif'){
-            $image = imagecreatefromgif($source);
-        }
-
-        //compress the image file to the quality given
-        imagejpeg($image, $destination, $quality);
+    if($mime == 'image/jpg'){
+        $image = imagecreatefromjpg($source);
+    }elseif($mime == 'image/png'){
+        $image = imagecreatefrompng($source);
+    }elseif($mime == 'image/gif'){
+        $image = imagecreatefromgif($source);
     }
 
-    //check if the have been submited
-    if(isset($_POST["submit"])){
+    //compress the image file to the quality given
+    imagejpeg($image, $destination, $quality);
+  }
 
-      //check if the input is empty
-      if(empty($_FILES['image']['name'])){
+  //check if the have been submited
+  if(isset($_POST["submit"])){
 
-          //display an empty message warning
-          $emptyInput = "Choose Your Image To Compress...!";
+    //check if the input is empty
+    if(empty($_FILES['image']['name'])){
+
+      //display an empty message warning
+      $emptyInput = "Choose Your Image To Compress...!";
+
+    }else{
+
+      //get the user input as image name
+      $uploadFile = $_FILES['image']['name'];
+
+      //target the folder to insert the image
+      $location = "compressedImageFile/".$uploadFile;
+
+      //create an array with image extensions
+      $extensions = array('png','gif','jpg','jpeg');
+
+      //get the user input file type extension
+      $fileExtension = pathinfo($uploadFile, PATHINFO_EXTENSION);
+
+      //convert the image file extension to lower case
+      $tolowerExt = strtolower($fileExtension);
+
+      //if the user input file has a valid extension of image
+      if(in_array ($tolowerExt, $extensions)){
+
+        $imagesize = $_FILES['image']['size'];
+
+        //choosen size
+        $choosenSize = $_POST['sizeSelect'];
+
+        //call this function
+        $compressedImage = compressImage($_FILES['image']['tmp_name'], $location, $choosenSize);
+
+        if ($compressedImage) {
+          //get file size
+          $compressedImageSize = filesize($compressedImage);
+          //done
+          $status = "successfully compressed..";
+        }else {
+          //not done
+          $emptyInput = "Image compression failed..";
+        }
 
       }else{
-
-          //get the user input as image name
-          $uploadFile = $_FILES['image']['name'];
-
-          //target the folder to insert the image
-          $location = "compressedImageFile/".$uploadFile;
-
-          //create an array with image extensions
-          $extensions = array('png','gif','jpg','jpeg');
-
-          //get the user input file type extension
-          $fileExtension = pathinfo($uploadFile, PATHINFO_EXTENSION);
-
-          //convert the image file extension to lower case
-          $tolowerExt = strtolower($fileExtension);
-
-              //if the user input file has a valid extension of image
-              if(in_array ($tolowerExt, $extensions)){
-
-                $imagesize = $_FILES['image']['size'];
-
-                  //call this function
-                $compressedImage = compressImage($_FILES['image']['tmp_name'], $location, 60);
-
-                if ($compressedImage ) {
-                  //get file size
-                  $compressedImageSize = filesize($compressedImage);
-                  //done
-                  $status = "successfully compressed..";
-                }else {
-                  //not done
-                  $emptyInput = "Image compression failed..";
-                }
-
-              }else{
-                  //error warning
-                  $emptyInput = "Invalid Image Extension USE (JPG, JPEG, GIF, PNG)....!";
-              }
-        }
+        //error warning
+        $emptyInput = "Invalid Image Extension USE (JPG, JPEG, GIF, PNG)....!";
+      }
     }
+  }
 ?>
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial_scale=0.1">
-        <title>Mr.Pinnacle Compressor</title>
-        <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
-        <link rel="stylesheet" href="./bootstrap/js/bootstrap.js">
-        <style media="screen">
-          body{
-            background: url(images/img.jpeg);
-            background-size: cover;
-          }
-          h2{
-            font-weight: bold;
-            font-family: sans-serif;
-          }
-          form{
-            margin-top: 20%;
-          }
-          span{
-            font-size: 1.2rem;
-            font-weight: bold;
-          }
-        </style>
-    </head>
+  <head>
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <meta name="viewport" content="width=device-width, initial_scale=0.1">
+      <title>Mr.Pinnacle Compressor</title>
+      <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+      <link rel="stylesheet" href="./bootstrap/js/bootstrap.js">
+      <link rel="stylesheet" href="style.css">
+      <style media="screen">
+        body{
+          background: url(images/img.jpeg);
+          background-size: cover;
+        }
+        h2{
+          font-weight: bold;
+          font-family: sans-serif;
+        }
+        form{
+          margin-top: 20%;
+        }
+        span{
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+      </style>
+  </head>
     <body class="container">
       <div class="row pt-5">
-        <div class="col-3"></div>
-        <div class="col-6">
+        <div class="col-3 d-none d-md-block"></div>
+        <div class="col-12 col-lg-6">
             <h2 class="mt-3 mb-5 text-center">Choose Your Image to Compressor</h2>
             <form action="compressor.php" method="POST" enctype="multipart/form-data">
               <span class="mb-3 text-danger">
                   <?php echo $emptyInput; ?>
               </span>
-              <input type="file" name="image" class="form-control mb-5">
+              <input type="file" name="image" class="form-control mb-5 p-3">
+              <select name="sizeSelect" class="form-control mb-4 p-3">
+                <option value="0">Choose Size (Default Size)</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+                <option value="60">60</option>
+                <option value="70">70</option>
+                <option value="80">80</option>
+                <option value="90">90</option>
+                <option value="100">100</option>
+              </select>
               <button type="submit" class="btn btn-primary mb-5 w-100 p-3" name="submit">Compress Now</button>
               <br>
               <span class="mb-3 text-success">
@@ -116,7 +133,7 @@
               </span>
             </form>
           </div>
-          <div class="col-3"></div>
+          <div class="col-3 d-none d-md-block"></div>
         </div>
         <div class="row mt-5">
           <div class="col-12">
@@ -128,7 +145,7 @@
           </div>
           <div class="col-12 mt-5 text-end">
             <a href="index.php">
-              <button type="button" class="btn btn-dark" name="button">Go Back</button>
+              <button type="button" class="btn btn-dark p-3 backBTN" name="button">Go Back</button>
             </a>
           </div>
         </div>

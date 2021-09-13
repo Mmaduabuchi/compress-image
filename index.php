@@ -7,6 +7,7 @@
     <title>compress</title>
     <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="./bootstrap/js/bootstrap.js">
+    <link rel="stylesheet" href="style.css">
     <style media="screen">
       body{
         background: url(images/img.jpeg);
@@ -30,7 +31,7 @@
       </div>
       <div class="col-12 text-center mt-5">
         <a href="compressor.php">
-          <button type="button" class="btn btn-primary p-3 w-25" name="button">Continue</button>
+          <button type="button" class="btn btn-primary p-3 continueBTN" name="button">Continue</button>
         </a>
       </div>
     </div>
