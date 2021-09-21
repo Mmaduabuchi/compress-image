@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">    
     <meta name="viewport" content="width=device-width, initial_scale=0.1">
-    <title>compress</title>
+    <title>Mr.Pinnacle Compressor</title>
     <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="./bootstrap/js/bootstrap.js">
     <link rel="stylesheet" href="style.css">

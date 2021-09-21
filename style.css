@@ -4,8 +4,10 @@
 }
 .backBTN{
     width: 25%;
-
 }
+
+/*screen size styling*/
+
 @media screen and (max-width: 600px) {
     .continueBTN{
         width: 100%;
